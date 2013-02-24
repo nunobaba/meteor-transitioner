@@ -3,8 +3,7 @@ Meteor Transitioner
 
 ### Updates
 
-While the initial Meteor Transitioner works out of the box, this branch cuts the JQuery leash 
-and enables same-to-same template navigation.
+While the initial Meteor Transitioner works out of the box, this branch cuts the JQuery leash.
 
 ### Install
 
