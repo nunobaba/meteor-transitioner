@@ -11,11 +11,19 @@
     this._nextPageListeners = new Meteor.deps._ContextSet();
     this._options = {}
   }
-  Transitioner.prototype._transitionEvents = 'webkitTransitionEnd.transitioner oTransitionEnd.transitioner transitionEnd.transitioner msTransitionEnd.transitioner transitionend.transitioner';
+  Transitioner.prototype._transitionEvents = [
+    'webkitTransitionEnd', 
+    'oTransitionEnd', 
+    'transitionEnd', 
+    'msTransitionEnd',
+    'transitionend'];
   
   Transitioner.prototype._transitionClasses = function() {
-    return "transitioning from_" + this._currentPage + 
-      " to_" + this._nextPage;
+    return [
+      "fx",
+      "from-" + this._currentPage,
+      "to-" + this._nextPage
+    ].join(" ")
   }
   
   Transitioner.prototype.setOptions = function(options) {
@@ -76,33 +84,41 @@
       
       self._options.before && self._options.before();
       
-      // add relevant classes to the body and wait for the body to finish 
-      // transitioning (this is how we know the transition is done)
-      $('body')
-        .addClass(self._transitionClasses())
-        .on(self._transitionEvents, function (e) {
-          if ($(e.target).is('body'))
-            self.endTransition();
+      // Listen to the main element to finish transitions. Browser vendor 
+      // specificities are taken into account. The "body" element is arbitrary
+      // set here to hold transition classes.
+      var _b = document.body;
+      for (var i = self._transitionEvents.length - 1; i >= 0; i--) {
+        _b.addEventListener(self._transitionEvents[i], function (e) {
+          self.endTransition();
         });
+      };
+      _b.className = _b.className.replace(/(from|to)\-[^\s]+/ig, "");
+      _b.className = [_b.className, self._transitionClasses()].join(" ").trim();
+
     })
   }
   
   Transitioner.prototype.endTransition = function() {
     var self = this;
-    var classes = self._transitionClasses();
     
     // if nextPage isn't set, something weird is going on, bail
     if (! self._nextPage)
       return;
     
-    // switch
+    // Update current and next pages.
     self._setCurrentPage(self._nextPage);
     self._setNextPage(null);
     
-    // clean up our transitioning state
+    // Clean up transitional class addition.
     Meteor._atFlush(function() {
-      $('body').off('.transitioner').removeClass(classes);
-      
+      var _b = document.body;
+      var _cls = self._transitionClasses().split(" ");
+      for (var i = _cls.length - 1; i >= 0; i--) {
+        _b.className = _b.className.replace(_cls[i], "");
+      };
+      _b.className = _b.className.trim();
+
       self._options.after && self._options.after();
     });
   }

@@ -1,1 +1,1 @@
-0.2.1 - 22-11-2012 - Changed transition events to be a class variable, thanks @tomconroy.
+0.1.0 - 22-02-2013 - Remove JQuery dependency.

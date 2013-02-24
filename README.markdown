@@ -1,11 +1,12 @@
 Meteor Transitioner
 ===================
 
-_Read more about it here: http://bindle.me/blog/index.php/679/page-transitions-in-meteor-getleague-com_
+### Updates
 
-_NOTE_: the above article uses outdated syntax.
+While the initial Meteor Transitioner works out of the box, this branch cuts the JQuery leash 
+and enables same-to-same template navigation.
 
-## Install
+### Install
 
 Use [meteorite](http://possibilities.github.com/meteorite/). Then add via:
 
@@ -13,7 +14,7 @@ Use [meteorite](http://possibilities.github.com/meteorite/). Then add via:
 mrt add transitioner
 ```
 
-## Usage
+### Usage
 
 Set up your routes using the [Meteor Router](https://github.com/tmeasday/meteor-router) in the usual way. Then there are two additional reactive variables you can access:
 
@@ -41,12 +42,12 @@ body.transitioning {
 }
 ```
 
-## Options
+### Options
 
 Call `Meteor.Transitioner.setOptions` to set the transitioner's options. Current options:
 
 - `before/after` - Provide callbacks to be run just before / after the transition happens.
 
-## Example
+### Example
 
 See `/example/slider` in this application. Run it with `mrt`.
