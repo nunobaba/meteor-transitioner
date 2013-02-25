@@ -64,6 +64,7 @@
   // do anything reactive.
   Transitioner.prototype.transition = function(newPage) {
     var self = this;
+    newPage = newPage instanceof Object ? newPage.page : newPage;
     
     // this is our first page? don't do a transition
     if (!self._currentPage)
